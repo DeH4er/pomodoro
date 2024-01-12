@@ -6,8 +6,8 @@ import Tab from './components/Tab';
 import formatMilliseconds from './lib/formatMilliseconds';
 
 function App() {
-  const [selectedTimer, setSelectedTimer] = useState(timers[0]);
-  const [currentTime, setCurrentTime] = useState(timers[0].time);
+  const [selectedTimer, setSelectedTimer] = useState<TimerData>(timers[0]);
+  const [currentTime, setCurrentTime] = useState<number>(timers[0].time);
   const [isPlaying, setIsPlaying] = useState(false);
   const timerRef = useRef<number | undefined>();
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -20,7 +20,6 @@ function App() {
 
   const stop = () => {
     setIsPlaying(false);
-    setCurrentTime(selectedTimer.time);
 
     if (timerRef.current) {
       clearInterval(timerRef.current);
@@ -47,6 +46,17 @@ function App() {
         }
         audioRef.current?.play();
         stop();
+
+        if (selectedTimer.id === 'work') {
+          onTimerChange(timers.find((t) => t.id === 'short-break')!);
+        }
+
+        if (
+          selectedTimer.id === 'short-break' ||
+          selectedTimer.id === 'long-break'
+        ) {
+          onTimerChange(timers.find((t) => t.id === 'work')!);
+        }
       },
     });
   };

@@ -1,12 +1,9 @@
 import { setInterval } from 'worker-timers';
+import type { ArrayElement } from './ArrayElement';
 
-export interface TimerData {
-  id: string;
-  label: string;
-  time: number;
-}
+export type TimerData = ArrayElement<typeof timers>;
 
-export const timers: TimerData[] = [
+export const timers = [
   {
     id: 'work',
     label: 'Work',
@@ -22,7 +19,7 @@ export const timers: TimerData[] = [
     label: 'Long Break',
     time: 15 * 60 * 1000,
   },
-];
+] as const;
 
 interface StartTimerProps {
   time: number;
@@ -35,14 +32,12 @@ export function startTimer({ time, onTick, onFinish }: StartTimerProps) {
 
   const tick = () => {
     currentTime.time -= 1000;
+    onTick(currentTime.time);
+
     if (currentTime.time <= 0) {
       onFinish?.();
     }
-
-    onTick(currentTime.time);
   };
-
-  tick();
 
   const intervalRef = setInterval(tick, 1000);
   return intervalRef;
