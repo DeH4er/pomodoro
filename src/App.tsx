@@ -1,3 +1,4 @@
+import { clearInterval } from 'worker-timers';
 import { useEffect, useRef, useState } from 'react';
 import timerBell from '/audio/TimerBell.mp3';
 import { timers, TimerData, startTimer } from './lib/timer';
@@ -20,7 +21,11 @@ function App() {
   const stop = () => {
     setIsPlaying(false);
     setCurrentTime(selectedTimer.time);
-    clearInterval(timerRef.current);
+
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
+
     timerRef.current = undefined;
   };
 

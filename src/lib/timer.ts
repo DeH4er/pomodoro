@@ -1,3 +1,5 @@
+import { setInterval } from 'worker-timers';
+
 export interface TimerData {
   id: string;
   label: string;
